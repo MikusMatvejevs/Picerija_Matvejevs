@@ -28,7 +28,7 @@ public class Picerija {
     static DarbsArFailu fails = new DarbsArFailu();
     
 	void izveidotPautijumu(){
-        numurs = 1;
+		numurs = 1;
         String[] rindas = pasutijumi.split("\n");
         for (String rinda : rindas) {
             String[] dati = rinda.split(";", -1);
@@ -41,11 +41,29 @@ public class Picerija {
                 }
             }
         }
-	}
+
+        if (ievaditDatus()) {
+            nodots = false;
+            ierakstitPasutijumu();
+            JOptionPane.showMessageDialog(null, "Izveidots pasūtījums Nr. " + numurs
+                    + "\nKopā: " + String.format("%.2f", kopsumma) + " EUR");
+        }
+    }
 	
 	void labotPasutijumu() {
-		
-	}
+		if (!atrastPasutijumu(nr)) {
+            JOptionPane.showMessageDialog(null, "Pasūtījums nav atrasts!");
+            return;
+        }
+        if (nodots) {
+            JOptionPane.showMessageDialog(null, "Nodotu pasūtījumu nevar labot!");
+            return;
+        }
+        if (ievaditDatus()) {
+            ierakstitPasutijumu();
+            JOptionPane.showMessageDialog(null, "Pasūtījums izlabots!");
+        }
+    }
 	
 	void apskatitPasutijumu() {
 		
