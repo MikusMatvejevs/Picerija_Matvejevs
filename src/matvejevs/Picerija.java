@@ -27,7 +27,7 @@ public class Picerija {
     static CenasAprekins cenas = new CenasAprekins();
     static DarbsArFailu fails = new DarbsArFailu();
     
-	void izveidotPautijumu(){
+    public static void izveidotPasutijumu(){
 		numurs = 1;
         String[] rindas = pasutijumi.split("\n");
         for (String rinda : rindas) {
@@ -50,7 +50,7 @@ public class Picerija {
         }
     }
 	
-	void labotPasutijumu() {
+	public static void labotPasutijumu() {
 		if (!atrastPasutijumu(nr)) {
             JOptionPane.showMessageDialog(null, "Pasūtījums nav atrasts!");
             return;
@@ -65,21 +65,50 @@ public class Picerija {
         }
     }
 	
-	void apskatitPasutijumu() {
-		
+	public static void apskatitPasutijumus() {
+		 String teksts = "";
+	     String[] rindas = pasutijumi.split("\n");
+	        for (String rinda : rindas) {
+	            String[] d = rinda.split(";", -1);
+	            if (d.length == 15 && Boolean.parseBoolean(d[8]) == raditNodotos) {
+	                teksts += "Nr. " + d[0] + " | " + d[1] + " | " + d[2] + "\n";
+	                teksts += "Adrese: " + d[3] + "\n";
+	                teksts += "Picas izmērs: " + d[4] + ", piedevas: " + d[5]
+	                        + ", mērce: " + d[6] + "\n";
+	                teksts += "Uzkoda: " + d[13] + ", dzēriens: " + d[14] + "\n";
+	                teksts += "Uz vietas: " + (Boolean.parseBoolean(d[7]) ? "Jā" : "Nē") + "\n";
+	                teksts += "Cena: " + d[12] + " EUR\n\n";
+	            }
+	        }
+	        if (teksts.isEmpty()) teksts = "Pasūtījumu nav.";
+	        JOptionPane.showMessageDialog(null, teksts);
 	}
 	
-	void nodotPasutijumu() {
-		
+	 public static void nodotPasutijumu() {
+		if (!atrastPasutijumu(nr)) {
+            JOptionPane.showMessageDialog(null, "Pasūtījums nav atrasts!");
+            return;
+        }
+        if (nodots) {
+            JOptionPane.showMessageDialog(null, "Pasūtījums jau ir nodots!");
+            return;
+        }
+        nodots = true;
+        ierakstitPasutijumu();
+        JOptionPane.showMessageDialog(null, "Pasūtījums nodots klientam!");
 	}
 	
-	boolean virknesParbaude(String teksts) {
-		return false;
-	}
+	public static boolean virknesParbaude(String teksts) {
+        return teksts != null && !teksts.trim().isEmpty();
+    }
 	
-	boolean talrunaParbaude(String talrunis) {
-		return false;
-	}
+	 public static boolean talrunaParbaude(String talrunis) {
+        if (talrunis == null || talrunis.length() != 8) return false;
+        for (int i = 0; i < talrunis.length(); i++) {
+            if (!Character.isDigit(talrunis.charAt(i))) return false;
+        }
+        return true;
+    }
 	
 	boolean atrastPasutijumu(int nr) {
 		return false;
