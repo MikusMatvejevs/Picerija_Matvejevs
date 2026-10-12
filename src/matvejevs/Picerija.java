@@ -20,7 +20,7 @@ public class Picerija {
     static double picasCena;
     static double kopsumma;
 	
- 	// Uzkodas un dzērieni (papildinajums no uzdevuma, bet nebija UML)
+ 	// Uzkodas un dzērieni (papildinajums no uzdevuma noteikumiem, bet nebija iekļauts UML)
     static String uzkoda;
     static String dzeriens;
 
@@ -168,7 +168,7 @@ public class Picerija {
         }
     }
 	
-	// Viena datu ievades metode gan jauna pasūtījuma veidošanai, gan labošanai.
+	// Viena datu ievades metode gan jauna pasūtījuma veidošanai, gan labošanai 
     public static boolean ievaditDatus() {
         String teksts = JOptionPane.showInputDialog("Klienta vārds:");
         if (teksts == null) return false;
