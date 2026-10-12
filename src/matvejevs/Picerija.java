@@ -168,6 +168,85 @@ public class Picerija {
         }
     }
 	
+	// Viena datu ievades metode gan jauna pasūtījuma veidošanai, gan labošanai.
+    public static boolean ievaditDatus() {
+        String teksts = JOptionPane.showInputDialog("Klienta vārds:");
+        if (teksts == null) return false;
+        while (!virknesParbaude(teksts)) {
+            teksts = JOptionPane.showInputDialog("Vārds nedrīkst būt tukšs. Ievadi vārdu:");
+            if (teksts == null) return false;
+        }
+        klientaVards = teksts.trim().replace(';', ',').replace('\n', ' ');
+
+        teksts = JOptionPane.showInputDialog("Tālruņa numurs (8 cipari):");
+        if (teksts == null) return false;
+        while (!talrunaParbaude(teksts)) {
+            teksts = JOptionPane.showInputDialog("Nepareizs tālrunis! Ievadi 8 ciparus:");
+            if (teksts == null) return false;
+        }
+        talrunis = teksts;
+
+        String[] sanemsana = {"Uz vietas", "Piegāde"};
+        int atbilde = JOptionPane.showOptionDialog(null, "Kā klients saņems pasūtījumu?",
+                "Saņemšana", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
+                null, sanemsana, sanemsana[0]);
+        if (atbilde == -1) return false;
+        uzVietas = atbilde == 0;
+
+        adrese = "-";
+        if (!uzVietas) {
+            teksts = JOptionPane.showInputDialog("Piegādes adrese:");
+            if (teksts == null) return false;
+            while (!virknesParbaude(teksts)) {
+                teksts = JOptionPane.showInputDialog("Ievadi piegādes adresi:");
+                if (teksts == null) return false;
+            }
+            adrese = teksts.trim().replace(';', ',').replace('\n', ' ');
+        }
+
+        String[] izmeri = {"Mazā", "Vidējā", "Lielā"};
+        teksts = (String) JOptionPane.showInputDialog(null, "Izvēlies izmēru:", "Pica",
+                JOptionPane.QUESTION_MESSAGE, null, izmeri, izmeri[0]);
+        if (teksts == null) return false;
+        izmers = 1;
+        if (teksts.equals("Vidējā")) izmers = 2;
+        if (teksts.equals("Lielā")) izmers = 3;
+
+        String[] piedevuVarianti = {"Bez piedevām", "Siers", "Šķiņķis", "Sēnes"};
+        piedevas = (String) JOptionPane.showInputDialog(null, "Izvēlies piedevas:", "Piedevas",
+                JOptionPane.QUESTION_MESSAGE, null, piedevuVarianti, piedevuVarianti[0]);
+        if (piedevas == null) return false;
+
+        String[] mercuVarianti = {"Bez mērces", "Ķiploku", "BBQ"};
+        merces = (String) JOptionPane.showInputDialog(null, "Izvēlies mērci:", "Mērces",
+                JOptionPane.QUESTION_MESSAGE, null, mercuVarianti, mercuVarianti[0]);
+        if (merces == null) return false;
+
+        String[] uzkodas = {"Nav", "Frī kartupeļi", "Vistas nageti"};
+        uzkoda = (String) JOptionPane.showInputDialog(null, "Izvēlies uzkodu:", "Uzkodas",
+                JOptionPane.QUESTION_MESSAGE, null, uzkodas, uzkodas[0]);
+        if (uzkoda == null) return false;
+
+        String[] dzerieni = {"Nav", "Ūdens", "Kola", "Sula"};
+        dzeriens = (String) JOptionPane.showInputDialog(null, "Izvēlies dzērienu:", "Dzērieni",
+                JOptionPane.QUESTION_MESSAGE, null, dzerieni, dzerieni[0]);
+        if (dzeriens == null) return false;
+
+        piedevuCena = cenas.piedevasCena(piedevas);
+        mercuCena = cenas.mercesCena(merces);
+        picasCena = cenas.picasCena(izmers, piedevuCena, mercuCena);
+        kopsumma = cenas.kopsumma(picasCena, uzVietas);
+
+        if (uzkoda.equals("Frī kartupeļi")) kopsumma += 3.50;
+        if (uzkoda.equals("Vistas nageti")) kopsumma += 4.50;
+        if (dzeriens.equals("Ūdens")) kopsumma += 1.00;
+        if (dzeriens.equals("Kola")) kopsumma += 2.00;
+        if (dzeriens.equals("Sula")) kopsumma += 2.50;
+
+        return true;
+        
+    }
+	
 	public static void main(String[] args) {
 		pasutijumi = fails.nolasit(failaNosaukums);
         String[] pogas = {"Jauns", "Labot", "Aktīvie", "Nodot", "Nodotie", "Iziet"};
