@@ -50,7 +50,7 @@ public class Picerija {
         }
     }
 	
-	public static void labotPasutijumu() {
+	public static void labotPasutijumu(int nr) {
 		if (!atrastPasutijumu(nr)) {
             JOptionPane.showMessageDialog(null, "Pasūtījums nav atrasts!");
             return;
@@ -65,7 +65,7 @@ public class Picerija {
         }
     }
 	
-	public static void apskatitPasutijumus() {
+	public static void apskatitPasutijumus(boolean raditNodotos) {
 		 String teksts = "";
 	     String[] rindas = pasutijumi.split("\n");
 	        for (String rinda : rindas) {
@@ -84,7 +84,7 @@ public class Picerija {
 	        JOptionPane.showMessageDialog(null, teksts);
 	}
 	
-	 public static void nodotPasutijumu() {
+	 public static void nodotPasutijumu(int nr) {
 		if (!atrastPasutijumu(nr)) {
             JOptionPane.showMessageDialog(null, "Pasūtījums nav atrasts!");
             return;
@@ -110,13 +110,63 @@ public class Picerija {
         return true;
     }
 	
-	boolean atrastPasutijumu(int nr) {
-		return false;
-	}
+	public static boolean atrastPasutijumu(int nr) {
+		String[] rindas = pasutijumi.split("\n");
+        for (String rinda : rindas) {
+            String[] d = rinda.split(";", -1);
+            if (d.length == 15 && d[0].equals("" + nr)) {
+                try {
+                    numurs = Integer.parseInt(d[0]);
+                    klientaVards = d[1];
+                    talrunis = d[2];
+                    adrese = d[3];
+                    izmers = Integer.parseInt(d[4]);
+                    piedevas = d[5];
+                    merces = d[6];
+                    uzVietas = Boolean.parseBoolean(d[7]);
+                    nodots = Boolean.parseBoolean(d[8]);
+                    piedevuCena = Double.parseDouble(d[9]);
+                    mercuCena = Double.parseDouble(d[10]);
+                    picasCena = Double.parseDouble(d[11]);
+                    kopsumma = Double.parseDouble(d[12]);
+                    uzkoda = d[13];
+                    dzeriens = d[14];
+                    return true;
+                } catch (NumberFormatException e) {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
 	
-	void ierakstitPasutijumu(){
-		
-	}
+	public static void ierakstitPasutijumu(){
+		String jaunaRinda = numurs + ";" + klientaVards + ";" + talrunis + ";"
+                + adrese + ";" + izmers + ";" + piedevas + ";" + merces + ";"
+                + uzVietas + ";" + nodots + ";" + piedevuCena + ";"
+                + mercuCena + ";" + picasCena + ";" + kopsumma + ";"
+                + uzkoda + ";" + dzeriens;
+
+        String jauniePasutijumi = "";
+        boolean atrasts = false;
+        String[] rindas = pasutijumi.split("\n");
+
+        for (String rinda : rindas) {
+            if (rinda.isEmpty()) continue;
+            String[] d = rinda.split(";", -1);
+            if (d.length == 15 && d[0].equals("" + numurs)) {
+                rinda = jaunaRinda;
+                atrasts = true;
+            }
+            jauniePasutijumi += rinda + "\n";
+        }
+        if (!atrasts) jauniePasutijumi += jaunaRinda + "\n";
+
+        pasutijumi = jauniePasutijumi;
+        if (!fails.saglabat(failaNosaukums, pasutijumi)) {
+            JOptionPane.showMessageDialog(null, "Kļūda saglabājot failu!");
+        }
+    }
 	
 	public static void main(String[] args) {
 		pasutijumi = fails.nolasit(failaNosaukums);
